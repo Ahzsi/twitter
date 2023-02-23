@@ -1,0 +1,54 @@
+
+{% extends "base.html" %} {% block content %} {% load static %}
+<section class="content">
+    <div class="logodiv">
+        <img src="{% static 'img/twitter.jpg' %}" alt="" class="twitterlog">
+        <h1>Home</h1>
+    </div>
+    
+    <section class="post_form">
+        <form action="" method="POST"  enctype="multipart/form-data">
+            {% csrf_token %}
+            <input style="background-color: #e6fef7;" type="text" name="name" placeholder="Your Name" required />
+            <textarea type="text" name="body" placeholder="What's happening?" required></textarea>
+            <input type="file" name="image">
+            <input type="submit" name="" id="" value="Tweet" />
+        </form>
+    </section>
+    <section class="posts">
+        <ul>
+            {% for post in posts %}
+            <li>
+                <img class="menu_icon js-menu-icon" src="{% static 'img/option.png' %}" />
+                <div class="menu">
+                    <a href="/delete/{{ post.id }} ">Delete</a> <br>
+                    <a href="/edit/{{ post.id }} ">Edit</a>
+                </div>
+                <div class="logo">
+                    <img src="{% static 'img/man.png' %} " />
+                </div>
+                <div class="name_body">
+                    <div class="name">{{ post.name }}</div>
+                    <div class="datetime">{{ post.created_at }}</div>
+                    <p>{{ post.body }}</p>
+                    <br>
+                    <!-- <a href="/delete/{{ post.id }} ">Delete</a> -->
+                    {% if post.image.url %}
+                    <img class="post-image" src="{{ post.image.url }}" width="100%" alt="">
+                    {% endif %}
+
+                    <form action="{% url 'like' post.pk %}" method="POST" id="likes-form">
+                        {% csrf_token %}
+                        <div class="row">
+                            <button class="like-button" type="submit", name="post_id", value="{{post.id}}"> &#10084;</button> {{post.likes}}
+                        </div>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.js " integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin=" anonymous "></script>
+    <script src="{% static 'js/posts.js' %} "></script>
+</section>
+{% endblock %}
